@@ -50,6 +50,8 @@ plot_baseline_eval_summary.GCL <- function(summary, file, method = c("MCMC", "PB
   
   if(!require("pacman")) install.packages("pacman"); library(pacman); pacman::p_load(tidyverse) #Install packages, if not in library and then load them.
   
+  if(!require("ggforce")) install.packages("ggforce"); library(ggforce) #Install packages, if not in library and then load them.
+  
   # Check methods
   method_check <- summary$estimates$method %>% 
     unique() %>% 
@@ -142,7 +144,7 @@ plot_baseline_eval_summary.GCL <- function(summary, file, method = c("MCMC", "PB
     
     # One method
     meth <- method
-    
+    for(i in 1:ceiling(length(test_groups)/9)){
     plot <- summary$estimates %>%
       dplyr::filter(method==meth, test_group==repunit) %>% 
       dplyr::left_join(summary$summary_stats, by = c("test_group", "method")) %>%
@@ -154,18 +156,18 @@ plot_baseline_eval_summary.GCL <- function(summary, file, method = c("MCMC", "PB
       ggplot2::geom_abline(intercept = 0.1, slope = 1, lty = 2) +
       ggplot2::geom_abline(intercept = -0.1, slope = 1, lty = 2) +
       ggplot2::scale_colour_manual(name = "Reporting Group", values = group_colors) +
-      ggplot2::geom_text(aes(x = .3, y = 1, label = paste0("RMSE:", round(RMSE, digits = 3))), color = "black", size = 3)+ 
-      ggplot2::geom_text(aes(x = .3, y = .94, label = paste0("Bias:", round(Mean_Bias, digits = 3))), color="black", size = 3)+
-      ggplot2::geom_text(aes(x = .3, y = .88, label = paste0("90% Within: ", round(100*`90%_within`, 1), "%")), color = "black", size = 3)+
-      ggplot2::geom_text(aes(x = .3, y = .82, label = paste0("Within Interval: ", round(100*Within_Interval, 1), "%")), color = "black", size = 3)+
-      ggplot2::facet_wrap(~ test_group) +
+      ggplot2::geom_text(aes(x = .3, y = 1, label = paste0("RMSE:", round(RMSE, digits = 3))), color = "black", size = 2.8)+ 
+      ggplot2::geom_text(aes(x = .3, y = .94, label = paste0("Bias:", round(Mean_Bias, digits = 3))), color="black", size = 2.8)+
+      ggplot2::geom_text(aes(x = .3, y = .88, label = paste0("90% Within: ", round(100*`90%_within`, 1), "%")), color = "black", size = 2.8)+
+      ggplot2::geom_text(aes(x = .3, y = .82, label = paste0("Within Interval: ", round(100*Within_Interval, 1), "%")), color = "black", size = 2.8)+
+      facet_wrap_paginate(~ test_group,ncol=3,nrow=3,page=i) +
       ggplot2::theme(legend.position = "none", strip.text.x = element_text(size = 16), panel.spacing.y = unit(3, "lines"))+
       ggplot2::xlab("True Proportion") +
       ggplot2::ylab("Posterior Mean Reporting Group Proportion") +
       ggtitle(paste0("Baseline evaluation test results: ", meth), subtitle = paste0(summary$estimates$total_samps %>% unique(), " sample mixtures"))
     
     print(plot)
-    
+    }
   }
   
   dev.off()
