@@ -1,6 +1,6 @@
 AllPossiblePhenotypes.GCL <- function(markerset){
   
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #   This function gets all possible combinations of phenotypes for set of loci. 
   #
   # Inputs~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
